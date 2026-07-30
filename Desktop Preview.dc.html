@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  html, body { margin:0; padding:0; background:#111; width:100%; height:100%; overflow:hidden; }
+</style>
+</helmet>
+
+<div style="width:100vw;height:100vh;background:#111;display:flex;align-items:flex-start;justify-content:center;overflow:hidden;padding-top:0;">
+  <!-- Browser chrome bar -->
+  <div style="width:100%;position:relative;">
+    <!-- Top chrome -->
+    <div style="background:#2a2a2a;height:40px;display:flex;align-items:center;padding:0 16px;gap:8px;border-bottom:1px solid #3a3a3a;">
+      <div style="display:flex;gap:6px;align-items:center;">
+        <div style="width:12px;height:12px;border-radius:50%;background:#ff5f57;"></div>
+        <div style="width:12px;height:12px;border-radius:50%;background:#febc2e;"></div>
+        <div style="width:12px;height:12px;border-radius:50%;background:#28c840;"></div>
+      </div>
+      <div style="flex:1;background:#1a1a1a;border-radius:6px;height:24px;display:flex;align-items:center;justify-content:center;margin:0 60px;">
+        <span style="color:#888;font-family:system-ui,sans-serif;font-size:12px;">nxdat.design</span>
+      </div>
+    </div>
+    <!-- Portfolio scaled to fit -->
+    <div style="width:100vw;overflow:hidden;position:relative;">
+      <iframe src="./index.html"
+        style="width:1400px;height:{{ iframeH }}px;border:none;transform-origin:top left;transform:scale({{ scale }});display:block;"
+        scrolling="yes">
+      </iframe>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { vw: window.innerWidth };
+  componentDidMount() {
+    const update = () => this.setState({ vw: window.innerWidth });
+    window.addEventListener('resize', update);
+    this._cleanup = () => window.removeEventListener('resize', update);
+  }
+  componentWillUnmount() { this._cleanup && this._cleanup(); }
+  renderVals() {
+    const vh = window.innerHeight;
+    const scale = Math.min(1, this.state.vw / 1400);
+    const iframeH = Math.round((vh - 40) / scale);
+    return { scale, iframeH };
+  }
+}
+</script>
+</body>
+</html>
